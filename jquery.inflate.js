@@ -70,9 +70,43 @@
 				return this;
 			}
 
-			/** TODO: Implement a variation to expand width. */
 			if( settings.width && !isNaN( settings.width ) ) {
-				// Not implemented
+				var delta      = settings.width - e.width();
+				var previous_e = this;
+
+				$(this).width( $(this).width() + delta );
+
+				if( settings.debug ) {
+					console.log( 'Added ' + delta + ' and resized matched element width to ' + $(this).width() );
+					console.log( 'Iterating over parent elements...' );
+				}
+
+				e.parentsUntil( document ).each( function() {
+					if( settings.debug ) {
+						console.log( '  => Current parent: ' + select( this ) );
+						console.log( '  => Previous parent: ' + select( this ) );
+					}
+
+					/**
+					 * Only adjust the height if the current element's height is less
+					 * than the height of its container.
+					 */
+					if( $(this).width() < $(previous_e).outerWidth( true ) ) {
+						$(this).width( $(this).width() + delta );
+
+						if( settings.debug ) {
+							console.log( '    => Resizing ' + this.tagName + ' (' + select( this ) + ') from ' + $(this).width() + ' (width) ' );
+							console.log( '    => Resized to ' + $(this).width() );
+						}
+					}
+					else {
+						if( settings.debug ) {
+							console.log( '    => No forced resize required.');
+						}
+					}
+
+					previous_e = this;
+				});
 			}
 
 			if( settings.height && !isNaN( settings.height ) ) {
@@ -143,9 +177,54 @@
 		this.each( function() {
 			e = $(this);
 
-			/** TODO: Implement a variation to maximize width. */
 			if( settings.width ) {
-				// Not implemented
+				var previous_e   = selector;
+
+				if( settings.debug ) {
+					console.log( 'Maximizing width of ' + select( this ) + ' against ' + select( previous_e ) + ' (' + $(previous_e).width() + ')' );
+				}
+
+				$(e.parentsUntil( selector ).get().reverse()).add(this).each( function( i, value ) {
+					/** The max height the current element can reach */
+					w = $(previous_e).width();
+
+					if( settings.debug ) {
+						console.log( '  => Setting width of ' + select( this ) + ' against ' + select( previous_e ) + ' (' + w + ')' );
+					}
+
+					/**
+					 * Adjust the available height for other visible siblings that aren't
+					 * hidden or positioned outside of the normal flow.
+					 */
+					$(previous_e).children().not( this ).each( function() {
+						/** TODO: maybe there's a better way to do this? */
+						if( $(this).css( 'position' ) != 'absolute' && $(this).css( 'display' ) != 'none' && $(this).css( 'float' ) == 'none' ) {
+
+							if( settings.debug ) {
+								console.log( '    => -' + $(this).outerWidth( true ) + ' (' + select( this ) + ')' );
+							}
+
+							w -= $(this).outerWidth( true )
+						}
+						else {
+							if( settings.debug ) {
+								console.log( '    => -0 (No need to adjust for ' + select( this ) + ')' );
+							}
+						}
+					});
+
+					/**
+					 * Set the element height with one final adjustment for the element's
+					 * own padding, borders & margins
+					 */
+					$(this).width( w - ( $(this).outerWidth( true ) - $(this).width() ) );
+					/** Give the next element access to its parent */
+					previous_e = this;
+
+					if( settings.debug ) {
+						console.log( '  => Set height to ' + w + ' - ( ' + $(this).outerWidth( true ) + ' - ' + $(this).width() + ' )' );
+					}
+				});
 			}
 
 			if( settings.height ) {
