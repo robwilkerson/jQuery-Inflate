@@ -62,10 +62,6 @@ Resizes an element to fill a container matched by the `selector` argument. This 
 
 The modified jQuery object for chaining.
 
-## Version & Roadmap
-
-This plugin is being released as `v0.5.0` because the functionality to resize horizontally hasn't been implemented yet; when I conceived of this plugin, the problem required only vertical resizing. Horizontal resizing should be trivial now that the basic mechanism has been vetted, but until it's complete, this is can't reasonably be considered a `v1.0.0` release.
-
 ## License
 
 This code is licensed under the MIT license.
