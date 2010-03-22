@@ -26,6 +26,7 @@ Given an element of any dimensions, this method will resize that element horizon
 #### Arguments
 
 `options`
+
 * `width` (int) The desired width. Defaults to `null` if horizontal resizing is not required/desired.
 * `height` (int) The desired height. Defaults to `null` if vertical resizing is not required/desired.
 * `debug` (bool) Whether to write debug messages to Firebug's console. Defaults to `false`.
@@ -54,6 +55,7 @@ Resizes an element to fill a container matched by the `selector` argument. This 
 #### Arguments
 
 `options`
+
 * `width` (bool) Whether to resize horizontally. Defaults to `false`.
 * `height` (bool) Whether to resize vertically. Defaults to `false`.
 * `debug` (bool) Whether to write debug messages to Firebug's console. Defaults to `false`.
